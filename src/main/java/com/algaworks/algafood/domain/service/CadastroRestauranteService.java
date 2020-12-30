@@ -1,5 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +22,13 @@ public class CadastroRestauranteService {
 	private CozinhaRepository cozinhaRepository;
 	
 	public Restaurante buscar(Long id) {
-		Restaurante restaurante = restauranteRepository.buscar(id);
+		Optional<Restaurante> restaurante = restauranteRepository.findById(id);
 		
-		if (restaurante == null) {
+		if (restaurante.isEmpty()) {
 			throw new EntidadeNaoEncontradaException(String.format("Restaurante com o código %d não encontrado.", id));
 		}
 		
-		return restaurante;
+		return restaurante.get();
 	}
 	
 	@Transactional
@@ -37,7 +39,7 @@ public class CadastroRestauranteService {
 						String.format("Não existe cadastro de cozinha com o código %d.", cozinhaId)));
 		
 		restaurante.setCozinha(cozinha);
-		return restauranteRepository.salvar(restaurante);
+		return restauranteRepository.save(restaurante);
 	}
 }
 	

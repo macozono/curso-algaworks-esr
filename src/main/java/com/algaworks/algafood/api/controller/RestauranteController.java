@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,18 +39,19 @@ public class RestauranteController {
 
 	@GetMapping
 	public List<Restaurante> listar() {
-		return this.restauranteRepository.listar(); 
+		return this.restauranteRepository.findAll(); 
 	}
 	
 	@GetMapping("/{idRestaurante}")
 	public ResponseEntity<Restaurante> buscar(@PathVariable Long idRestaurante) {
-		try {
-			Restaurante restaurante = cadastroRestauranteService.buscar(idRestaurante);
-			return ResponseEntity.ok(restaurante);
-			
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
+		Optional<Restaurante> restaurante = restauranteRepository.findById(idRestaurante);
+
+		if (restaurante.isPresent()) {
+			return ResponseEntity.ok(restaurante.get());
 		}
+
+		return ResponseEntity.notFound().build();
+
 	}
 	
 	@PostMapping

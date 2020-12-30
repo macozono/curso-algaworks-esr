@@ -163,6 +163,12 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
 		return false;
 	}
 
+	@Override
+	public List<Cozinha> findByNome(String nome) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 //	@PersistenceContext
 //	private EntityManager manager;
 //	
