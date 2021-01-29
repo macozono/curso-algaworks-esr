@@ -1,12 +1,11 @@
 package com.algaworks.algafood.domain.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
@@ -22,21 +21,17 @@ public class CadastroRestauranteService {
 	private CozinhaRepository cozinhaRepository;
 	
 	public Restaurante buscar(Long id) {
-		Optional<Restaurante> restaurante = restauranteRepository.findById(id);
+		Restaurante restaurante = restauranteRepository.findById(id)
+				.orElseThrow(() -> new RestauranteNaoEncontradoException(id));
 		
-		if (restaurante.isEmpty()) {
-			throw new EntidadeNaoEncontradaException(String.format("Restaurante com o código %d não encontrado.", id));
-		}
-		
-		return restaurante.get();
+		return restaurante;
 	}
 	
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
 		Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(
-						String.format("Não existe cadastro de cozinha com o código %d.", cozinhaId)));
+				.orElseThrow(() -> new CozinhaNaoEncontradaException(cozinhaId));
 		
 		restaurante.setCozinha(cozinha);
 		return restauranteRepository.save(restaurante);
