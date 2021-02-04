@@ -18,10 +18,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
@@ -51,8 +50,12 @@ public class Restaurante {
 	private String nome;
 	
 	@Column(name = "taxa_frete", nullable = false)
-	@DecimalMin(value = "1")
-	@DecimalMax(value = "40")
+//	@DecimalMin(value = "1")
+//	@DecimalMax(value = "40")
+	@NotNull
+	@PositiveOrZero
+	// @TaxaFrete(message = "{TaxaFrete.invalida}")
+	// @Multiplo(numero = 5)
 	private BigDecimal taxaFrete;
 	
 	@JsonIgnoreProperties("hibernateLazyInitializer")
