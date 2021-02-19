@@ -17,10 +17,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
@@ -29,6 +29,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.algaworks.algafood.api.validation.Groups;
 import com.algaworks.algafood.api.validation.Groups.CozinhaId;
+import com.algaworks.algafood.api.validation.TaxaFrete;
+import com.algaworks.algafood.api.validation.ValorZeroIncluiDescricao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -38,6 +40,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ValorZeroIncluiDescricao(descricaoField = "nome", valorField = "taxaFrete", descricaoObrigatoria = "Obrigatório informar que taxa frete é gratis")
 public class Restaurante {
 
 	@EqualsAndHashCode.Include
@@ -53,8 +56,8 @@ public class Restaurante {
 //	@DecimalMin(value = "1")
 //	@DecimalMax(value = "40")
 	@NotNull
-	@PositiveOrZero
-	// @TaxaFrete(message = "{TaxaFrete.invalida}")
+	// @PositiveOrZero
+	@TaxaFrete(message = "{TaxaFrete.invalida}")
 	// @Multiplo(numero = 5)
 	private BigDecimal taxaFrete;
 	
