@@ -38,9 +38,9 @@ insert into cidade (nome, estado_id) values ('São Paulo', 2);
 insert into cidade (nome, estado_id) values ('Campinas', 2);
 insert into cidade (nome, estado_id) values ('Fortaleza', 3);
 
-insert into restaurante (nome, taxa_frete, cozinha_id, endereco_cidade_id, endereco_bairro, endereco_cep, endereco_complemento, endereco_logradouro, endereco_numero, data_cadastro, data_atualizacao) values ('Thai Gourmet', 10, 1, 3, "Presidente Altino", "06213-040", "torre 1 apto 74", "Rua Zuma de Sá Fernandes", "323", utc_timestamp, utc_timestamp);
-insert into restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Thai Delivery', 9.50, 1, utc_timestamp, utc_timestamp);
-insert into restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Tuk Tuk Comida Indiana', 15, 2, utc_timestamp, utc_timestamp);
+insert into restaurante (nome, taxa_frete, cozinha_id, endereco_cidade_id, endereco_bairro, endereco_cep, endereco_complemento, endereco_logradouro, endereco_numero, data_cadastro, data_atualizacao, ativo) values ('Thai Gourmet', 10, 1, 3, "Presidente Altino", "06213-040", "torre 1 apto 74", "Rua Zuma de Sá Fernandes", "323", utc_timestamp, utc_timestamp, true);
+insert into restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo) values ('Thai Delivery', 9.50, 1, utc_timestamp, utc_timestamp, true);
+insert into restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo) values ('Tuk Tuk Comida Indiana', 15, 2, utc_timestamp, utc_timestamp, true);
 
 insert into forma_pagamento (descricao) values ('Cartão de crédito');
 insert into forma_pagamento (descricao) values ('Cartão de débito');

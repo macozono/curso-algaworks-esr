@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.algaworks.algafood.api.model.input.RestauranteInput;
+import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 
 @Component
@@ -15,5 +16,12 @@ public class RestauranteInputDisassembler {
 	
 	public Restaurante toDomainObject(RestauranteInput input) {
 		return modelMapper.map(input, Restaurante.class);
+	}
+	
+	public void copyToDomainObject(RestauranteInput input, Restaurante restaurante) {
+		// para evitar org.hibernate.HibernateException: identifier of instance of
+		// com.algaworks.algafood.domain.model.Cozinha was altered from 1 to 2
+		restaurante.setCozinha(new Cozinha());
+		modelMapper.map(input, restaurante);
 	}
 }

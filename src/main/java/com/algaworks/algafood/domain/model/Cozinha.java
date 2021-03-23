@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 
@@ -28,7 +27,6 @@ public class Cozinha {
 	private Long id;
 
 	@Column(nullable = false)
-	@NotBlank
 	private String nome;
 	
 	@OneToMany(mappedBy = "cozinha")
