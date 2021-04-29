@@ -12,6 +12,9 @@ DELETE FROM restaurante;
 DELETE FROM restaurante_forma_pagamento;
 DELETE FROM usuario;
 DELETE FROM usuario_grupo;
+DELETE FROM restaurante_usuario_responsavel;
+DELETE FROM pedido;
+DELETE FROM item_pedido;
 
 set foreign_key_checks = 1;
 
@@ -27,6 +30,8 @@ ALTER TABLE usuario auto_increment = 1;
 
 INSERT INTO cozinha (nome) VALUES ("Tailandesa");
 INSERT INTO cozinha (nome) VALUES ("Indiana");
+INSERT INTO cozinha (nome) VALUES ("Brasileira");
+INSERT INTO cozinha (nome) VALUES ("Americana");
 
 insert into estado (nome) values ('Minas Gerais');
 insert into estado (nome) values ('São Paulo');
@@ -38,9 +43,12 @@ insert into cidade (nome, estado_id) values ('São Paulo', 2);
 insert into cidade (nome, estado_id) values ('Campinas', 2);
 insert into cidade (nome, estado_id) values ('Fortaleza', 3);
 
-insert into restaurante (nome, taxa_frete, cozinha_id, endereco_cidade_id, endereco_bairro, endereco_cep, endereco_complemento, endereco_logradouro, endereco_numero, data_cadastro, data_atualizacao, ativo) values ('Thai Gourmet', 10, 1, 3, "Presidente Altino", "06213-040", "torre 1 apto 74", "Rua Zuma de Sá Fernandes", "323", utc_timestamp, utc_timestamp, true);
-insert into restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo) values ('Thai Delivery', 9.50, 1, utc_timestamp, utc_timestamp, true);
-insert into restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo) values ('Tuk Tuk Comida Indiana', 15, 2, utc_timestamp, utc_timestamp, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_bairro) values (1, 'Thai Gourmet', 10, 1, utc_timestamp, utc_timestamp, true, true, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (2, 'Thai Delivery', 9.50, 1, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (3, 'Tuk Tuk Comida Indiana', 15, 2, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (4, 'Java Steakhouse', 12, 4, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (5, 'Lanchonete do Tio Sam', 11, 4, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (6, 'Bar da Maria', 6, 3, utc_timestamp, utc_timestamp, true, true);
 
 insert into forma_pagamento (descricao) values ('Cartão de crédito');
 insert into forma_pagamento (descricao) values ('Cartão de débito');
@@ -65,9 +73,34 @@ insert into produto (nome, descricao, preco, ativo, restaurante_id) values ("Pro
 
 insert into grupo (nome) values ('Gerente'), ('Vendedor'), ('Secretária'), ('Cadastrador');
 
+insert into grupo_permissao (grupo_id, permissao_id) values (1, 1), (1, 2), (2, 1), (2, 2), (3, 1);
 
 insert into usuario (id, nome, email, senha, data_cadastro) values
 	(1, 'João da Silva', 'joao.ger@algafood.com', '123', utc_timestamp),
 	(2, 'Maria Joaquina', 'maria.vnd@algafood.com', '123', utc_timestamp),
 	(3, 'José Souza', 'jose.aux@algafood.com', '123', utc_timestamp),
 	(4, 'Sebastião Martins', 'sebastiao.cad@algafood.com', '123', utc_timestamp);
+	
+	
+insert into usuario_grupo (usuario_id, grupo_id) values (1, 1), (1, 2), (2, 2);
+
+insert into usuario (id, nome, email, senha, data_cadastro) values (5, 'Manoel Lima', 'manoel.loja@gmail.com', '123', utc_timestamp);
+
+insert into restaurante_usuario_responsavel (restaurante_id, usuario_id) values (1, 5), (3, 5);
+
+insert into pedido (id, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
+    endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
+    status, data_criacao, subtotal, taxa_frete, valor_total)
+values (1, 1, 1, 1, 1, '38400-000', 'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil', 'CRIADO', utc_timestamp, 298.90, 10, 308.90);
+
+insert into item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total, observacao) values (1, 1, 1, 1, 78.9, 78.9, null);
+
+insert into item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total, observacao) values (2, 1, 2, 2, 110, 220, 'Menos picante, por favor');
+
+
+insert into pedido (id, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
+        endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
+        status, data_criacao, subtotal, taxa_frete, valor_total) 
+values (2, 4, 1, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro', 'CRIADO', utc_timestamp, 79, 0, 79);
+
+insert into item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total, observacao) values (3, 2, 6, 1, 79, 79, 'Ao ponto');

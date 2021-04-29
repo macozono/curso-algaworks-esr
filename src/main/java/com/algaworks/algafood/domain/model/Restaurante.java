@@ -69,6 +69,8 @@ public class Restaurante {
 	
 	private Boolean ativo = true;
 	
+	private Boolean aberto = false;
+	
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
 	private OffsetDateTime dataCadastro;
@@ -79,6 +81,12 @@ public class Restaurante {
 	
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<>();
+	
+	@ManyToMany
+	@JoinTable( name = "restaurante_usuario_responsavel",
+				joinColumns = @JoinColumn(name = "restaurante_id"),
+				inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+	private Set<Usuario> responsaveis = new HashSet<>();
 	
 	public void ativar() {
 		this.ativo = true;
@@ -94,5 +102,29 @@ public class Restaurante {
 	
 	public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
 		return this.formasPagamento.add(formaPagamento);
+	}
+	
+	public void abrir() {
+		setAberto(true);
+	}
+	
+	public void fechar() {
+		setAberto(false);
+	}
+	
+	public boolean removerResponsavel(Usuario usuario) {
+		return this.getResponsaveis().remove(usuario);
+	}
+	
+	public boolean adicionarResponsavel(Usuario usuario) {
+		return this.getResponsaveis().add(usuario);
+	}
+	
+	public boolean aceitarFormaPagamento(FormaPagamento formaPagamento) {
+		return getFormasPagamento().add(formaPagamento);
+	}
+	
+	public boolean naoAceitarFormaPagamento(FormaPagamento formaPagamento) {
+		return getFormasPagamento().remove(formaPagamento);
 	}
 }
