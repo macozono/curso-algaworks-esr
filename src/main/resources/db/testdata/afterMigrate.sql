@@ -18,6 +18,8 @@ DELETE FROM item_pedido;
 
 set foreign_key_checks = 1;
 
+ALTER TABLE pedido auto_increment = 1;
+ALTER TABLE item_pedido auto_increment = 1;
 ALTER TABLE cidade auto_increment = 1;
 ALTER TABLE cozinha auto_increment = 1;
 ALTER TABLE estado auto_increment = 1;
