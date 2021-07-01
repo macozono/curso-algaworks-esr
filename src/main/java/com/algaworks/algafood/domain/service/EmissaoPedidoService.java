@@ -35,8 +35,8 @@ public class EmissaoPedidoService {
 	@Autowired
 	private CadastroFormaPagamentoService cadastroFormaPagamento;
 	
-	public Pedido buscarOuFalhar(Long pedidoId) {
-		return repository.findById(pedidoId).orElseThrow(() -> new PedidoNaoEncontradoException(pedidoId));
+	public Pedido buscarOuFalhar(String codigoPedido) {
+		return repository.findByCodigo(codigoPedido).orElseThrow(() -> new PedidoNaoEncontradoException(codigoPedido));
 	}
 	
 	@Transactional
