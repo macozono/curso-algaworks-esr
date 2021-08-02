@@ -2,12 +2,12 @@ package com.algaworks.algafood.infrastructure.service.email;
 
 import java.io.IOException;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import com.algaworks.algafood.core.email.EmailProperties;
@@ -17,7 +17,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-@Service
 public class SmtpEnvioEmailService implements EnvioEmailService {
 
 	@Autowired
@@ -31,23 +30,30 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
 	
 	@Override
 	public void enviar(Mensagem mensagem) {
-		MimeMessage mimeMessage = mailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
-		
+		 
 		try {
-			helper.setSubject(mensagem.getAssunto());
-			helper.setText(processarTemplate(mensagem), Boolean.TRUE);
-			helper.setTo(mensagem.getDestinatarios().toArray(new String[] {}));
-			helper.setFrom(properties.getRemetente());
-			
+			MimeMessage mimeMessage = criarMimeMessage(mensagem);
+			mailSender.send(mimeMessage);
 		} catch (Exception e) {
 			throw new EmailException("Não foi possível enviar e-mail", e);
 		}
-		
-		mailSender.send(mimeMessage);
 	}
 	
-	private String processarTemplate(Mensagem mensagem) {
+	protected MimeMessage criarMimeMessage(Mensagem mensagem) throws MessagingException {
+	    String corpo = processarTemplate(mensagem);
+	    
+	    MimeMessage mimeMessage = mailSender.createMimeMessage();
+	    
+	    MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+	    helper.setFrom(properties.getRemetente());
+	    helper.setTo(mensagem.getDestinatarios().toArray(new String[0]));
+	    helper.setSubject(mensagem.getAssunto());
+	    helper.setText(corpo, true);
+	    
+	    return mimeMessage;
+	}
+	
+	protected String processarTemplate(Mensagem mensagem) {
 		try {
 			Template template = freemarkerConfig.getTemplate(mensagem.getCorpo());
 			return FreeMarkerTemplateUtils.processTemplateIntoString(template, mensagem.getVariaveis());
