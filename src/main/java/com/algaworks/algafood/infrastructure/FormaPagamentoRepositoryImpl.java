@@ -1,5 +1,6 @@
 package com.algaworks.algafood.infrastructure;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -162,6 +163,18 @@ public class FormaPagamentoRepositoryImpl implements FormaPagamentoRepository {
 	public <S extends FormaPagamento> boolean exists(Example<S> example) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public OffsetDateTime getDataUltimaAtualizacao() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public OffsetDateTime getDataAtualizacaoById(Long formaPagamentoId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 //	@Override
