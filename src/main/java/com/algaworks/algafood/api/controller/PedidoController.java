@@ -1,15 +1,15 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +24,8 @@ import com.algaworks.algafood.api.assembler.PedidoResumoModelAssembler;
 import com.algaworks.algafood.api.model.PedidoModel;
 import com.algaworks.algafood.api.model.PedidoResumoModel;
 import com.algaworks.algafood.api.model.input.PedidoInput;
+import com.algaworks.algafood.api.openapi.controller.PedidoControllerOpenApi;
+import com.algaworks.algafood.core.data.PageWrapper;
 import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -36,8 +38,8 @@ import com.algaworks.algafood.infrastructure.spec.PedidosSpec;
 import com.google.common.collect.ImmutableMap;
 
 @RestController
-@RequestMapping("/pedidos")
-public class PedidoController {
+@RequestMapping(value = "/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class PedidoController implements PedidoControllerOpenApi {
 
 	@Autowired
 	private PedidoRepository repository;
@@ -59,6 +61,9 @@ public class PedidoController {
 	
 	@Autowired
 	private EmissaoPedidoService emissaoPedido;
+	
+	@Autowired
+	private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
 	
 //	@GetMapping
 //	public List<PedidoResumoModel> listar() {
@@ -86,14 +91,13 @@ public class PedidoController {
 //	}
 	
 	@GetMapping
-	public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
-		pageable = traduzirPageable(pageable);
-		Page<Pedido> pedidosPage = repository.findAll(PedidosSpec.usandoFiltro(filtro), pageable);
+	public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
+		Pageable pageableTraduzido = traduzirPageable(pageable);
+		Page<Pedido> pedidosPage = repository.findAll(PedidosSpec.usandoFiltro(filtro), pageableTraduzido);
 		
-		List<PedidoResumoModel> pedidosResumo = resumoAssembler.toCollectionModel(pedidosPage.getContent());
-		Page<PedidoResumoModel> pedidoResumoPage = new PageImpl<>(pedidosResumo, pageable, pedidosPage.getTotalElements());
+		pedidosPage = new PageWrapper<>(pedidosPage, pageable);
 		
-		return pedidoResumoPage;
+		return pagedResourcesAssembler.toModel(pedidosPage, resumoAssembler);
 	} 
 	
 	@GetMapping("/{codigoPedido}")
