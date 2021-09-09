@@ -52,6 +52,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 
 	@GetMapping
 	public PagedModel<CozinhaModel> listar(@PageableDefault(size = 10) Pageable pageable) {
+		
 	    Page<Cozinha> cozinhasPaginadas = cozinhaRepository.findAll(pageable);
 	    PagedModel<CozinhaModel> cozinhaPagedModel = pagedResourcesCozinha.toModel(cozinhasPaginadas, cozinhaModelAssembler);
 	    
