@@ -62,4 +62,8 @@ public class Usuario {
 	public void adicionarGrupo(Grupo grupo) {
 		this.getGrupos().add(grupo);
 	}
+	
+	public boolean isNovo() {
+	    return getId() == null;
+	}
 }
