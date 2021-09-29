@@ -11,7 +11,8 @@ public enum ProblemType {
 	MENSAGEM_INCONSISTENTE("/mensagem-inconsistente", "Mensagem inconsistente"),
 	PARAMETRO_INVALIDO("/parametro-invalido", "Parâmetro inválido"),
 	DADOS_INVALIDOS("/dados-invalidos", "Dados inválidos"),
-	ERRO_DE_SISTEMA("/erro-de-sistema", "Erro de sistema");
+	ERRO_DE_SISTEMA("/erro-de-sistema", "Erro de sistema"),
+	ACESSO_NEGADO("/acesso-negado", "Acesso negado");
 	
 	private String title;
 	private String uri;
