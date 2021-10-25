@@ -8,11 +8,11 @@ public class SecurityController {
 
 	@GetMapping("/login")
 	public String login() {
-		return "/login";
+		return "login";
 	}
 	
 	@GetMapping("/oauth/confirm_access")
 	public String confirmAccess() {
-		return "/approval";
+		return "approval";
 	}
 }
