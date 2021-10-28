@@ -1,21 +1,14 @@
 package com.algaworks.algafood.infrastructure.service.email;
 
-import java.io.IOException;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import com.algaworks.algafood.core.email.EmailProperties;
 import com.algaworks.algafood.domain.service.EnvioEmailService;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 public class SmtpEnvioEmailService implements EnvioEmailService {
 
@@ -26,7 +19,7 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
 	private EmailProperties properties;
 	
 	@Autowired
-	private Configuration freemarkerConfig;
+	private ProcessadorEmailTemplate processadorEmailTemplate;
 	
 	@Override
 	public void enviar(Mensagem mensagem) {
@@ -40,7 +33,7 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
 	}
 	
 	protected MimeMessage criarMimeMessage(Mensagem mensagem) throws MessagingException {
-	    String corpo = processarTemplate(mensagem);
+	    String corpo = processadorEmailTemplate.processarTemplate(mensagem);
 	    
 	    MimeMessage mimeMessage = mailSender.createMimeMessage();
 	    
@@ -51,16 +44,5 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
 	    helper.setText(corpo, true);
 	    
 	    return mimeMessage;
-	}
-	
-	protected String processarTemplate(Mensagem mensagem) {
-		try {
-			Template template = freemarkerConfig.getTemplate(mensagem.getCorpo());
-			return FreeMarkerTemplateUtils.processTemplateIntoString(template, mensagem.getVariaveis());
-		} catch (IOException e) {
-			throw new EmailException("Não foi possível processar template", e);
-		} catch (TemplateException e) {
-			throw new EmailException("Não foi possível processar template", e);
-		}
 	}
 }
